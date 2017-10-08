@@ -6,14 +6,15 @@ const config = require('./config');
 const api = require('./api');
 const { MongoClient } = require('mongodb');
 const http = require('http');
+const debug = require('debug');
 
 let dbConnection, httpServer;
 
 // Create Database connection.
 
-function connectDatabase() {
+function connectDatabase(dbUri) {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(config.dbSettings.uri, (err, db) => {
+    MongoClient.connect(dbUri, (err, db) => {
       if (err) {
         reject(err);
       }
@@ -31,14 +32,13 @@ function createServices(db) {
 
 // Create http server.
 
-function runHttpServer(services) {
+function runHttpServer(port, services) {
   return new Promise((resolve, reject) => {
     const appApi = api(services);
-    const port = config.httpSettings.port;
-
     httpServer = http.createServer(appApi.callback());
     httpServer.listen(port, () => {
-      resolve();
+      debug('app:log')(`Http server listening on port ${port}`);
+      resolve(httpServer);
     });
     httpServer.on('error', err => {
       switch (err.code) {
@@ -55,24 +55,12 @@ function runHttpServer(services) {
   });
 }
 
-// Booting application
-
-connectDatabase()
-  .then(createServices)
-  .then(runHttpServer)
-  .then(() => {
-    console.log('Application Boot ready');
-  })
-  .catch(err => {
-    console.error('Error booting application', err);
-  });
-
 // Graceful shutdown.
 
 const shutdown = async () => {
   const date = new Date();
-  console.info('\nOh, good bye!, starting graceful shutdown');
-  
+  debug('app:info')('\nOh, good bye!, starting graceful shutdown');
+
   if (dbConnection) {
     dbConnection.close();
   }
@@ -83,10 +71,32 @@ const shutdown = async () => {
     }));
   }
   
-  console.info(`Graceful shutdown ends [${ Date.now() - date.getTime()}ms]`);
+  debug('app:info')(`Graceful shutdown ends [${ Date.now() - date.getTime()}ms]`);
   
-  process.exit(0);
+  return Promise.resolve();
 };
 
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+// Booting application
+
+if (process.env.NODE_ENV !== 'test') {
+  connectDatabase(config.dbSettings.uri)
+  .then(createServices)
+  .then(services => runHttpServer(config.httpSettings.port, services))
+  .then(() => {
+    debug('app:log')('Application Boot ready');
+  })
+  .catch(err => {
+    debug('app:error')('Error booting application', err);
+  });
+}
+else {
+  exports.createServices = createServices;
+  exports.runHttpServer = runHttpServer;
+  exports.connectDatabase = connectDatabase;
+  exports.shutdown = shutdown;
+}
+
+if (process.env.NODE_ENV !== 'test') {
+  process.on('SIGTERM', () => shutdown().then(() => process.exit(0)));
+  process.on('SIGINT', () => shutdown().then(() => process.exit(0)));
+}

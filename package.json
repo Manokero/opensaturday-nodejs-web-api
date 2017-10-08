@@ -5,13 +5,22 @@
   "main": "source/index.js",
   "scripts": {
     "start": "node source/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test-integration --silent",
+    "test-integration": "mocha --no-timeouts test/integration/setup.js test/integration/api/**/*.js"
   },
   "author": "Joan Gabriel Peralta Santana <joanperalta13@gmail.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "debug": "^3.1.0",
     "koa": "^2.3.0",
     "koa-router": "^7.2.1",
     "mongodb": "^2.2.31"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "mocha": "^4.0.1",
+    "mongodb-memory-server": "^1.6.1",
+    "request": "^2.83.0"
   }
 }
