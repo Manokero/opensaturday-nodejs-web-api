@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Set test environment
  */
@@ -47,4 +49,8 @@ beforeEach(async function () {
 
 afterEach(done => {
   app.shutdown().then(() => done()).catch(err => done(err));;
+});
+
+after(done => {
+  process.exit(0);
 });

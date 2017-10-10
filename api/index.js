@@ -9,8 +9,18 @@ module.exports = services => {
   const app = new Koa();
   const router = koaRouter();
   
-  router.get('/hello', async (ctx, next) => {
-    ctx.body = 'world';
+  router.get('/speakers', async (ctx, next) => {
+    ctx.body = {
+      result: await services.speakers.getAll()
+    };
+    await next();
+  });
+  
+  router.get('/speakers/:id', async (ctx, next) => {
+    const speakerId = ctx.params.id;
+    ctx.body = {
+      result: await services.speakers.getById(speakerId)
+    };
     await next();
   });
   

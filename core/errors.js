@@ -8,3 +8,4 @@ class CoreError extends Error {
 
 // CoreError example
 exports.InvalidParameter = (param, data) => new CoreError(`Invalid parameter '${param}'`, 'E_INVALID_PARAM', 400, data);
+exports.InvalidSpeakerId = (param, data) => new CoreError(`Invalid speaker id`, 'E_INVALID_ID', 400, data);

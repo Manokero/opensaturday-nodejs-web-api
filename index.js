@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Require module dependencies
  */
@@ -7,6 +9,9 @@ const api = require('./api');
 const { MongoClient } = require('mongodb');
 const http = require('http');
 const debug = require('debug');
+
+const speakerRepository = require('./adapters/repository/speaker');
+const speakerService = require('./core/services/speaker');
 
 let dbConnection, httpServer;
 
@@ -27,7 +32,9 @@ function connectDatabase(dbUri) {
 }
 
 function createServices(db) {
-  return Promise.resolve({});
+  return Promise.resolve({
+    speakers: speakerService(speakerRepository(db))
+  });
 }
 
 // Create http server.
