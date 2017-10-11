@@ -14,13 +14,19 @@ const userRoutes = require('./routes/user-routes');
 
 const loggerMiddleware = require('./middlewares/logger');
 const apiResponseMiddleware = require('./middlewares/apiResponse');
+const sessionMiddleware = require('./middlewares/session');
 
 module.exports = services => {
   const app = new Koa();
 
+  app.use(async (ctx, next) => {
+    ctx.services = services;
+    await next();
+  });
   app.use(koaBody());
   app.use(loggerMiddleware);
   app.use(apiResponseMiddleware);
+  app.use(sessionMiddleware);
 
   speakerRoutes(app, services);
   userRoutes(app, services);

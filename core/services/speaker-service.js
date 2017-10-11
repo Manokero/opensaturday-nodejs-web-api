@@ -6,7 +6,7 @@
 const { ObjectId } = require('mongodb');
 const { InvalidId } = require('../errors');
 
-module.exports = speakerRepository => {
+module.exports = function(speakerRepository) {
   return {
     async insert(name, company, summary, profileImageUrl, githubUsername) {
       return await speakerRepository.insert(name, company, summary, profileImageUrl, githubUsername);
@@ -23,4 +23,4 @@ module.exports = speakerRepository => {
       return await speakerRepository.byId(speakerId);
     }
   }
-}
+};

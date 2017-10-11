@@ -1,5 +1,7 @@
 'use strict';
 
+/* global beforeEach, it, describe */
+
 /**
  * Require module dependencies.
  */
@@ -11,7 +13,7 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('Speakers', () => {
-  let speaker1, speaker2;
+  let speaker1;
 
   beforeEach(async function () {
     speaker1 = await this.services.speakers.insert(
@@ -22,7 +24,7 @@ describe('Speakers', () => {
       'https://avatars2.githubusercontent.com/u/3039328?v=4&s=460', 
       'jgdev'
     );
-    speaker2 = await this.services.speakers.insert(
+    await this.services.speakers.insert(
       'Noe Branagan',
       'Senior Android Developer',
       'InstaCarro',

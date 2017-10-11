@@ -14,6 +14,7 @@ const speakerRepository = require('./adapters/repository/speaker-repo');
 const speakerService = require('./core/services/speaker-service');
 const userRepository = require('./adapters/repository/user-repo');
 const userService = require('./core/services/user-service');
+const sessionService = require('./core/services/session-service');
 
 let dbConnection, httpServer;
 
@@ -34,10 +35,17 @@ function connectDatabase(dbUri) {
 }
 
 function createServices(db) {
-  return Promise.resolve({
+  const services = {
+    sessions: sessionService(),
     speakers: speakerService(speakerRepository(db)),
-    users: userService(userRepository(db)),
+  };
+  
+  services.users = userService({ 
+    userRepository: userRepository(db),
+    sessionService: services.sessions
   });
+
+  return Promise.resolve(services);
 }
 
 // Create http server.

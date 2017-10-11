@@ -16,6 +16,14 @@ module.exports = (app, services) => {
     ctx.body = await services.users.createUser(email, fullName, gender);
     await next();
   });
+  
+  // User login
+  
+  router.post('/users/login', async (ctx, next) => {
+    const { email } = ctx.request.body;
+    ctx.body = await services.users.login(email);
+    await next();
+  });
 
   app.use(router.allowedMethods());
   app.use(router.routes());

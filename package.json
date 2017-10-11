@@ -4,7 +4,7 @@
   "description": "OpenSaturday RESTful web api",
   "main": "source/index.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint ./**/*.js ./test/**/*.js",
+    "lint": "./node_modules/.bin/eslint .",
     "pretest": "npm run lint --silent",
     "start": "node source/index.js",
     "test": "npm run test-integration --silent",

@@ -43,7 +43,7 @@ module.exports = async (ctx, next) => {
   if (!utils.isReadableContent(ctx.body) && (ctx.is('json') || ctx.accepts('json'))) {
     ctx.status = (ctx.code === 'E_NO_FOUND' ? ((ctx.data || ctx.body ) ? 200 : 404) : ctx.status);
 
-    let response = {};
+    const response = {};
 
     response.msg = ctx.msg || ctx.message;
     response.code = ctx.status === 200 ? 'SUCCESS' : (ctx.code || ctx.status);
