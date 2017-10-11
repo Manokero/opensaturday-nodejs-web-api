@@ -51,7 +51,7 @@ describe('Speakers', () => {
         if (err) return done(err);
         res.should.have.status(200);
         res.body.should.be.a('object');
-        
+
         // Validate speaker properties.
         
         const result = res.body.result;

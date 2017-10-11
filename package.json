@@ -4,21 +4,27 @@
   "description": "OpenSaturday RESTful web api",
   "main": "source/index.js",
   "scripts": {
+    "lint": "./node_modules/.bin/eslint ./**/*.js ./test/**/*.js",
+    "pretest": "npm run lint --silent",
     "start": "node source/index.js",
     "test": "npm run test-integration --silent",
-    "test-integration": "mocha --no-timeouts test/integration/setup.js test/integration/api/**/*.js"
+    "test-integration": "./node_modules/.bin/mocha --ui bdd --timeout 3000 test/integration/setup.js test/integration/api/**/*.js --recursive"
   },
   "author": "Joan Gabriel Peralta Santana <joanperalta13@gmail.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
     "debug": "^3.1.0",
     "koa": "^2.3.0",
+    "koa-body": "^2.5.0",
     "koa-router": "^7.2.1",
     "mongodb": "^2.2.31"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
+    "eslint": "^4.8.0",
+    "eslint-config-node": "^1.6.0",
+    "eslint-plugin-mocha": "^4.11.0",
     "mocha": "^4.0.1",
     "mongodb-memory-server": "^1.6.1",
     "request": "^2.83.0"

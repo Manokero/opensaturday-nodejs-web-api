@@ -1,5 +1,7 @@
 'use strict';
 
+/* global beforeEach, afterEach, after */
+
 /**
  * Set test environment
  */
@@ -16,17 +18,16 @@ const MongoDbServer = require('mongodb-memory-server').default;
 let portrange = 3000;
 
 function getPort () {
-  return new Promise((resolve, reject) => {
-    var port = portrange;
-  
-    var server = net.createServer();
-    server.listen(port, function (err) {
-      server.once('close', function () {
+  return new Promise((resolve) => {
+    const port = portrange;
+    const server = net.createServer();
+    server.listen(port, () => {
+      server.once('close', () => {
         resolve(port);
       })
       server.close();
     });
-    server.on('error', function (err) {
+    server.on('error', () => {
       portrange += 1;
       getPort().then(port => resolve(port));
     });
@@ -35,22 +36,23 @@ function getPort () {
 
 debug('test:app:info')('Setting up test environment ...');
 
+const mongod = new MongoDbServer();
+
 beforeEach(async function () {
   const httpPort = await getPort();
-  const mongod = new MongoDbServer();
   const dbUri = await mongod.getConnectionString();
   
-  this.dbConnection = await app.connectDatabase(dbUri);
-  this.services = await app.createServices(this.dbConnection);
+  this.db = await app.connectDatabase(dbUri);
+  this.services = await app.createServices(this.db);
   this.httpServer = await app.runHttpServer(httpPort, this.services);
 
   return Promise.resolve();
 });
 
 afterEach(done => {
-  app.shutdown().then(() => done()).catch(err => done(err));;
+  app.shutdown().then(() => done()).catch(err => done(err));
 });
 
-after(done => {
-  process.exit(0);
+after(() => {
+  mongod.stop();
 });

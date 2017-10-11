@@ -4,7 +4,7 @@
  * Require module dependencies
  */
 const { ObjectId } = require('mongodb');
-const { InvalidSpeakerId } = require('../errors');
+const { InvalidId } = require('../errors');
 
 module.exports = speakerRepository => {
   return {
@@ -18,7 +18,7 @@ module.exports = speakerRepository => {
       try {
         speakerId = ObjectId(speakerId);
       } catch (err) {
-        throw InvalidSpeakerId(); 
+        throw InvalidId(); 
       }
       return await speakerRepository.byId(speakerId);
     }

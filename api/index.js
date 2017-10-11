@@ -3,29 +3,27 @@
  */
 
 const Koa = require('koa');
-const koaRouter = require('koa-router');
+const koaBody = require('koa-body');
+
+// Include routes
+
+const speakerRoutes = require('./routes/speaker-routes');
+const userRoutes = require('./routes/user-routes');
+
+// Include middlewares
+
+const loggerMiddleware = require('./middlewares/logger');
+const apiResponseMiddleware = require('./middlewares/apiResponse');
 
 module.exports = services => {
   const app = new Koa();
-  const router = koaRouter();
-  
-  router.get('/speakers', async (ctx, next) => {
-    ctx.body = {
-      result: await services.speakers.getAll()
-    };
-    await next();
-  });
-  
-  router.get('/speakers/:id', async (ctx, next) => {
-    const speakerId = ctx.params.id;
-    ctx.body = {
-      result: await services.speakers.getById(speakerId)
-    };
-    await next();
-  });
-  
-  app.use(router.allowedMethods());
-  app.use(router.routes());
-  
+
+  app.use(koaBody());
+  app.use(loggerMiddleware);
+  app.use(apiResponseMiddleware);
+
+  speakerRoutes(app, services);
+  userRoutes(app, services);
+
   return app;
-}
+};

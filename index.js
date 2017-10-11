@@ -10,8 +10,10 @@ const { MongoClient } = require('mongodb');
 const http = require('http');
 const debug = require('debug');
 
-const speakerRepository = require('./adapters/repository/speaker');
-const speakerService = require('./core/services/speaker');
+const speakerRepository = require('./adapters/repository/speaker-repo');
+const speakerService = require('./core/services/speaker-service');
+const userRepository = require('./adapters/repository/user-repo');
+const userService = require('./core/services/user-service');
 
 let dbConnection, httpServer;
 
@@ -33,7 +35,8 @@ function connectDatabase(dbUri) {
 
 function createServices(db) {
   return Promise.resolve({
-    speakers: speakerService(speakerRepository(db))
+    speakers: speakerService(speakerRepository(db)),
+    users: userService(userRepository(db)),
   });
 }
 

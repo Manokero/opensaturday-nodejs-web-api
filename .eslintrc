@@ -1,0 +1,22 @@
+{
+  "extends": "node",
+  "plugins": [
+    "mocha"
+  ],
+  "rules": {
+    "import/no-commonjs": 0,
+    "import/no-nodejs-modules": 0,
+    "no-invalid-this": 0,
+    "no-use-before-define": 0,
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "no-param-reassign": 0,
+    "no-return-assign": 0,
+    "no-underscore-dangle": 0,
+    "allowForLoopAfterthoughts": 0,
+    "no-plusplus": 0,
+    "strict": 0,
+    "max-len": ["off", { "ignoreComments": true, "ignoreTrailingComments": true, "ignoreUrls": true, "ignoreStrings": true, "ignoreTemplateLiterals": true }],
+    "global-require": 0,
+    "eol-last": ["error", "always"]
+  }
+}
