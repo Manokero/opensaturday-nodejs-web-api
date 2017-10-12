@@ -18,6 +18,7 @@
     "max-len": ["off", { "ignoreComments": true, "ignoreTrailingComments": true, "ignoreUrls": true, "ignoreStrings": true, "ignoreTemplateLiterals": true }],
     "global-require": 0,
     "eol-last": ["error", "always"],
-    "no-process-exit": 0
+    "no-process-exit": 0,
+    "prefer-arrow-callback": 0
   }
 }

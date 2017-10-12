@@ -60,10 +60,10 @@ describe('Speakers', () => {
         result.should.be.a('object');
         result.should.have.deep.property('name', speaker1.name);
         result.should.have.deep.property('company', speaker1.company);
-        result.should.have.deep.property('title');
-        result.should.have.deep.property('summary');
-        result.should.have.deep.property('profileImageUrl');
-        result.should.have.deep.property('githubUsername');
+        result.should.have.deep.property('title', speaker1.title);
+        result.should.have.deep.property('summary', speaker1.summary);
+        result.should.have.deep.property('profileImageUrl', speaker1.profileImageUrl);
+        result.should.have.deep.property('githubUsername', speaker1.githubUsername);
         done();
       });
   });

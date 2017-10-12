@@ -8,8 +8,8 @@ const { InvalidId } = require('../errors');
 
 module.exports = function(speakerRepository) {
   return {
-    async insert(name, company, summary, profileImageUrl, githubUsername) {
-      return await speakerRepository.insert(name, company, summary, profileImageUrl, githubUsername);
+    async insert(name, title, company, summary, profileImageUrl, githubUsername) {
+      return await speakerRepository.insert(name, title, company, summary, profileImageUrl, githubUsername);
     },
     async getAll() {
       return await speakerRepository.all();

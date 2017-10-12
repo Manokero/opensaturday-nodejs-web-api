@@ -1,6 +1,6 @@
 'use strict';
 
-/* global beforeEach, afterEach, after */
+/* global beforeEach, afterEach */
 
 /**
  * Set test environment
@@ -39,6 +39,8 @@ debug('test:app:info')('Setting up test environment ...');
 const mongod = new MongoDbServer();
 
 beforeEach(async function () {
+  mongod.start();
+
   const httpPort = await getPort();
   const dbUri = await mongod.getConnectionString();
   
@@ -50,9 +52,6 @@ beforeEach(async function () {
 });
 
 afterEach(done => {
-  app.shutdown().then(() => done()).catch(err => done(err));
-});
-
-after(() => {
   mongod.stop();
+  app.shutdown().then(() => done()).catch(err => done(err));
 });

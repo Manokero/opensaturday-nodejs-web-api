@@ -9,6 +9,7 @@ const koaBody = require('koa-body');
 
 const speakerRoutes = require('./routes/speaker-routes');
 const userRoutes = require('./routes/user-routes');
+const eventRoutes = require('./routes/event-routes');
 
 // Include middlewares
 
@@ -30,6 +31,7 @@ module.exports = services => {
 
   speakerRoutes(app, services);
   userRoutes(app, services);
+  eventRoutes(app, services);
 
   return app;
 };

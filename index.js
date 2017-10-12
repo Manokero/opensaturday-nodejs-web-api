@@ -14,6 +14,8 @@ const speakerRepository = require('./adapters/repository/speaker-repo');
 const speakerService = require('./core/services/speaker-service');
 const userRepository = require('./adapters/repository/user-repo');
 const userService = require('./core/services/user-service');
+const eventRepository = require('./adapters/repository/event-repo');
+const eventService = require('./core/services/event-service');
 const sessionService = require('./core/services/session-service');
 
 let dbConnection, httpServer;
@@ -38,6 +40,7 @@ function createServices(db) {
   const services = {
     sessions: sessionService(),
     speakers: speakerService(speakerRepository(db)),
+    events: eventService(eventRepository(db))
   };
   
   services.users = userService({ 
