@@ -105,5 +105,16 @@ describe('Events', () => {
     .then(() => done())
     .catch((err) => done(err));
   });
-  it('GET /events/?speaker=:speakerId  - It should get all events by Speaker');
+  it('GET /events/speaker/:speakerId   - It should get all events by Speaker', function (done) {
+    chai.request(this.httpServer)
+      .get(`/events/speaker/${fakeData[0].speaker}`)
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.result.should.be.a('array');
+        res.body.result.length.should.be.eql(1);
+        done();
+      });
+  });
 });

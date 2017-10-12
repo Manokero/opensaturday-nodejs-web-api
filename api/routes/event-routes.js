@@ -14,6 +14,12 @@ module.exports = (app, services) => {
     await next();
   });
 
+  router.get('/events/speaker/:id', async (ctx, next) => {
+    const { id } = ctx.params;
+    ctx.body = await services.events.getAll(ctx.query, id);
+    await next();
+  });
+
   router.get('/events/:id', async (ctx, next) => {
     const { id } = ctx.params;
     ctx.body = await services.events.getById(id);
