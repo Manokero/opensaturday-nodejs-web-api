@@ -11,8 +11,11 @@ module.exports = function(eventRepository) {
     async insert(title, speaker, tags, couponsLimit) {
       return await eventRepository.insert(title, speaker, tags, couponsLimit);
     },
-    async getAll() {
-      return await eventRepository.all();
+    async getAll({ tags = '' }) {
+      if (tags) {
+        tags = tags.split(',');
+      }
+      return await eventRepository.all(tags);
     },
     async getById(eventId = '') {
       try {

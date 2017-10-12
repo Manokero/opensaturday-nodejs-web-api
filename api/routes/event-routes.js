@@ -10,7 +10,7 @@ module.exports = (app, services) => {
   const router = koaRouter();
 
   router.get('/events/', async (ctx, next) => {
-    ctx.body = await services.events.getAll();
+    ctx.body = await services.events.getAll(ctx.query);
     await next();
   });
 

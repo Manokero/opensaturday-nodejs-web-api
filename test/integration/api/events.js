@@ -63,6 +63,47 @@ describe('Events', () => {
         done();
       });
   });
-  it('GET /events/?tags=[tags, ...]    - It should get all events that contains same tags by separated commas');
+  it('GET /events/?tags=[tags, ...]    - It should get all events that contains same tags by separated commas', function (done) {
+    Promise.all([
+      new Promise((resolve, reject) => {
+        chai.request(this.httpServer)
+          .get(`/events?tags=OpenSaturday`)
+          .end((err, res) => {
+            if (err) return reject(err);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.result.should.be.a('array');
+            res.body.result.length.should.be.eql(2);
+            resolve();
+          });
+      }),
+      new Promise((resolve, reject) => {
+        chai.request(this.httpServer)
+          .get(`/events?tags=Node.js`)
+          .end((err, res) => {
+            if (err) return reject(err);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.result.should.be.a('array');
+            res.body.result.length.should.be.eql(1);
+            resolve();
+          });
+      }),
+      new Promise((resolve, reject) => {
+        chai.request(this.httpServer)
+          .get(`/events?tags=Swift,iOS`)
+          .end((err, res) => {
+            if (err) return reject(err);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.result.should.be.a('array');
+            res.body.result.length.should.be.eql(1);
+            resolve();
+          });
+      })
+    ])
+    .then(() => done())
+    .catch((err) => done(err));
+  });
   it('GET /events/?speaker=:speakerId  - It should get all events by Speaker');
 });

@@ -8,7 +8,14 @@ module.exports = db => {
         title, speaker, tags, couponsLimit
       })).ops[0];
     },
-    async all() {
+    async all(tags = []) {
+      if (tags.length) {
+        return await collection.find({
+          tags: {
+            $all: tags
+          }
+        }).toArray();
+      }
       return await collection.find({}).toArray();
     },
     async byId(eventId) {
