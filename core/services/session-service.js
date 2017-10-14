@@ -31,19 +31,21 @@ module.exports = function() {
             token
         });
     },
-    getByToken (token) {
+    getByToken(token) {
         const userSession = session.find((s) => s.token === token);
         
         if (!userSession) {
             throw InvalidSession();
         }
+        
+        return userSession;
     },
-    async checkAndUpdateSession(session) {
-        const isExpired = (Date.now - session.date) > (SESSION_EXPIRATION_TIME / 1000);
+    async checkAndUpdateSession(reqSession) {
+        const isExpired = (Date.now - reqSession.date) > (SESSION_EXPIRATION_TIME / 1000);
         if (isExpired) {
             throw SessionExpired();
         } else {
-            const index = session.findIndex((s) => s.token === session.token);
+            const index = session.findIndex((s) => s.token === reqSession.token);
             if (index > -1) {
                 session[index].date = Date.now();
             }

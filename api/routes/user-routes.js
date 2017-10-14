@@ -5,6 +5,7 @@
  */
 
 const koaRouter = require('koa-router');
+const { NeedSession } = require('../../core/errors');
 
 module.exports = (app, services) => {
   const router = koaRouter();
@@ -24,6 +25,44 @@ module.exports = (app, services) => {
     ctx.body = await services.users.login(email);
     await next();
   });
+  
+  // Get user info by email
+  
+  router.get('/users/info/:email', async (ctx, next) => {
+    const { email } = ctx.params;
+    ctx.body = await services.users.getByEmail(email);
+    await next();
+  });
+  
+  const checkSession = async (ctx, next) => {
+    if (!ctx.headers.authorization) {
+      throw NeedSession();
+    }
+    await next();
+  }
+  
+  // Register to an event.
+  
+  router.post('/users/register-to-event',
+    checkSession,
+    async (ctx, next) => {
+      const userId = ctx.session.userInfo._id;
+      const { eventId } = ctx.request.body;
+      ctx.body = await services.events.addUser(eventId, userId);
+      await next();
+    });
+  
+  // Unregister from an event.
+  
+  router.post('/users/unregister-from-event', 
+    checkSession,
+    async (ctx, next) => {
+      const userId = ctx.session.userInfo._id;
+      const { eventId } = ctx.request.body; 
+      await services.events.removeUser(eventId, userId);
+      ctx.body = true;
+      await next();
+    });
 
   app.use(router.allowedMethods());
   app.use(router.routes());

@@ -36,14 +36,12 @@ function getPort () {
 
 debug('test:app:info')('Setting up test environment ...');
 
-const mongod = new MongoDbServer();
-
 beforeEach(async function () {
-  mongod.start();
-
+  const mongod = new MongoDbServer();
   const httpPort = await getPort();
   const dbUri = await mongod.getConnectionString();
   
+  this.mongod = mongod;
   this.db = await app.connectDatabase(dbUri);
   this.services = await app.createServices(this.db);
   this.httpServer = await app.runHttpServer(httpPort, this.services);
@@ -51,7 +49,7 @@ beforeEach(async function () {
   return Promise.resolve();
 });
 
-afterEach(done => {
-  mongod.stop();
+afterEach(function (done) {
+  this.mongod.stop();
   app.shutdown().then(() => done()).catch(err => done(err));
 });

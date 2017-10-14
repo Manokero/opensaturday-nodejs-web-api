@@ -30,6 +30,7 @@ function connectDatabase(dbUri) {
       }
       else {
         dbConnection = db;
+        debug('app:log')(`Connected to database: ${dbUri}`);
         resolve(db);
       }
     });
@@ -45,7 +46,8 @@ function createServices(db) {
   
   services.users = userService({ 
     userRepository: userRepository(db),
-    sessionService: services.sessions
+    sessionService: services.sessions,
+    eventsService: services.events
   });
 
   return Promise.resolve(services);

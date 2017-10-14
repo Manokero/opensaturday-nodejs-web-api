@@ -47,7 +47,7 @@ module.exports = function({ userRepository, sessionService }) {
 
       const token = await sessionService.createToken(user);
       return token;
-    }
+    },
   }
 }
 
