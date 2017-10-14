@@ -41,9 +41,9 @@ function createServices(db) {
   const services = {
     sessions: sessionService(),
     speakers: speakerService(speakerRepository(db)),
-    events: eventService(eventRepository(db))
   };
-  
+
+  services.events = eventService(eventRepository(db), services.speakers);
   services.users = userService({ 
     userRepository: userRepository(db),
     sessionService: services.sessions,

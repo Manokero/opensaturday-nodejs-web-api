@@ -58,9 +58,8 @@ module.exports = (app, services) => {
     checkSession,
     async (ctx, next) => {
       const userId = ctx.session.userInfo._id;
-      const { eventId } = ctx.request.body; 
-      await services.events.removeUser(eventId, userId);
-      ctx.body = true;
+      const { eventId } = ctx.request.body;
+      ctx.body = await services.events.removeUser(eventId, userId);
       await next();
     });
 

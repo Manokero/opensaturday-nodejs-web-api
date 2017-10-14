@@ -6,16 +6,20 @@
 const { ObjectId } = require('mongodb');
 const { InvalidId, EventNotFound, FullEvent } = require('../errors');
 
-module.exports = function(eventRepository) {
+module.exports = function(eventRepository, speakerService) {
+  const populateSpeaker = async function(event) {
+    const dataSpeaker = await speakerService.getById(event.speaker);
+    event.speaker = dataSpeaker;
+    return event;
+  };
   return {
     async insert(title, speaker, tags, totalCoupons, usedCoupons) {
       return await eventRepository.insert(title, speaker, tags, totalCoupons, usedCoupons);
     },
-    async getAll({ tags = '' }, speaker) {
+    async getAll(speaker, { tags = '', speakerInfo }) {
       if (tags) {
         tags = tags.split(',');
       }
-      
       if (speaker) {
         try {
           speaker = ObjectId(speaker);
@@ -23,15 +27,25 @@ module.exports = function(eventRepository) {
           throw InvalidId();
         }
       }
-      return await eventRepository.all(tags, speaker);
+      const events = (await eventRepository.all(tags, speaker));
+      for (let i = 0; i < events.length; i++) {
+        if (typeof speakerInfo !== 'undefined') {
+          events[i] = await populateSpeaker(events[i]);
+        }
+      }
+      return events;
     },
-    async getById(eventId = '') {
+    async getById(eventId = '', { speakerInfo } = {}) {
       try {
         eventId = ObjectId(eventId);
       } catch (err) {
         throw InvalidId(); 
       }
-      return await eventRepository.byId(eventId);
+      const event = await eventRepository.byId(eventId);
+      if (typeof speakerInfo !== 'undefined') {
+        return await populateSpeaker(event);
+      }
+      return event;
     },
     async addUser(eventId, userId) {
       try {
